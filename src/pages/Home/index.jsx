@@ -1,6 +1,65 @@
-import React from 'react';
-import { Container } from './styles';
+import React, { useState } from "react";
+import {
+    Container,
+    Search,
+    LogoContainer,
+    Logo,
+    Wrapper,
+    MapContainer,
+    CarrouselTitle,
+    Carousel,
+} from "./styles";
+import logo from "../../assets/logo.svg";
+import restaurant from "../../assets/restaurante-fake.png";
+import TextField, { Input } from "@material/react-text-field";
+import MaterialIcon from "@material/react-material-icon";
+import { Card } from "../../components";
 
-const Home = () => <Container>Hello world!</Container>;
+const Home = () => {
+    const [inputValue, setInputValue] = useState("");
+
+    const settings = {
+        dots: false,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+    };
+
+    return (
+        <Wrapper>
+            <Container>
+                <Search>
+                    <LogoContainer>
+                        <Logo src={logo} alt="Logo do restaurante" />
+                    </LogoContainer>
+                    <TextField
+                        label="Pesquisar"
+                        outlined
+                        trailingIcon={
+                            <MaterialIcon role="button" icon="search" />
+                        }
+                    >
+                        <Input
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                        />
+                    </TextField>
+                    <CarrouselTitle> O que você deseja comer? </CarrouselTitle>
+                    <Carousel {...settings}>
+                        <Card photo={restaurant} title="Meu restaurante" />
+                        <Card photo={restaurant} title="Meu restaurante" />
+                        <Card photo={restaurant} title="Meu restaurante" />
+                        <Card photo={restaurant} title="Meu restaurante" />
+                        <Card photo={restaurant} title="Meu restaurante" />
+                        <Card photo={restaurant} title="Meu restaurante" />
+                        <Card photo={restaurant} title="Meu restaurante" />
+                    </Carousel>
+                </Search>
+            </Container>
+            <MapContainer></MapContainer>
+        </Wrapper>
+    );
+};
 
 export default Home;
