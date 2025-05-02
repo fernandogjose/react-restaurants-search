@@ -10,6 +10,7 @@ export const Container = styled.div`
   width: 360px;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 export const Search = styled.section`
