@@ -24,7 +24,7 @@ export const LogoContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%; /* Ajuste conforme necessário */
+  width: 100%;
 `;
 
 export const Logo = styled.img`
@@ -48,7 +48,13 @@ export const CarrouselTitle = styled.h1`
 `;
 
 export const Carousel = styled(Slider)`
-  .slick-slide > div {
-    padding: 8px; /* Espaçamento entre os slides */
+  .slick-slide {
+    margin: 0 10px; /* Espaço entre os slides */
+    box-sizing: border-box;
+  }
+
+  .slick-track {
+    display: flex !important; /* Garante que fique em uma linha */
+    align-items: stretch;
   }
 `;

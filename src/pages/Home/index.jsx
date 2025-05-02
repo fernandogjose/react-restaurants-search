@@ -13,7 +13,7 @@ import logo from "../../assets/logo.svg";
 import restaurant from "../../assets/restaurante-fake.png";
 import TextField, { Input } from "@material/react-text-field";
 import MaterialIcon from "@material/react-material-icon";
-import { Card } from "../../components";
+import { ImageCard, RestaurantCard } from "../../components";
 
 const Home = () => {
     const [inputValue, setInputValue] = useState("");
@@ -24,6 +24,7 @@ const Home = () => {
         speed: 500,
         slidesToShow: 4,
         slidesToScroll: 4,
+        rows: 1,
     };
 
     return (
@@ -47,15 +48,16 @@ const Home = () => {
                     </TextField>
                     <CarrouselTitle> O que você deseja comer? </CarrouselTitle>
                     <Carousel {...settings}>
-                        <Card photo={restaurant} title="Meu restaurante" />
-                        <Card photo={restaurant} title="Meu restaurante" />
-                        <Card photo={restaurant} title="Meu restaurante" />
-                        <Card photo={restaurant} title="Meu restaurante" />
-                        <Card photo={restaurant} title="Meu restaurante" />
-                        <Card photo={restaurant} title="Meu restaurante" />
-                        <Card photo={restaurant} title="Meu restaurante" />
+                        <ImageCard photo={restaurant} title="Meu restaurante" />
+                        <ImageCard photo={restaurant} title="Meu restaurante" />
+                        <ImageCard photo={restaurant} title="Meu restaurante" />
+                        <ImageCard photo={restaurant} title="Meu restaurante" />
+                        <ImageCard photo={restaurant} title="Meu restaurante" />
+                        <ImageCard photo={restaurant} title="Meu restaurante" />
+                        <ImageCard photo={restaurant} title="Meu restaurante" />
                     </Carousel>
                 </Search>
+                <RestaurantCard />
             </Container>
             <MapContainer></MapContainer>
         </Wrapper>
