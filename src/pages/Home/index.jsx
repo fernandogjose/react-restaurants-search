@@ -5,7 +5,6 @@ import {
     LogoContainer,
     Logo,
     Wrapper,
-    MapContainer,
     CarrouselTitle,
     Carousel,
 } from "./styles";
@@ -13,11 +12,11 @@ import logo from "../../assets/logo.svg";
 import restaurant from "../../assets/restaurante-fake.png";
 import TextField, { Input } from "@material/react-text-field";
 import MaterialIcon from "@material/react-material-icon";
-import { ImageCard, RestaurantCard, Modal } from "../../components";
+import { ImageCard, RestaurantCard, Modal, Map } from "../../components";
 
 const Home = () => {
     const [inputValue, setInputValue] = useState("");
-    const [modalOpened, setModalOpened] = useState(true);
+    const [modalOpened, setModalOpened] = useState(false);
 
     const settings = {
         dots: false,
@@ -60,7 +59,7 @@ const Home = () => {
                 </Search>
                 <RestaurantCard />
             </Container>
-            <MapContainer></MapContainer>
+            <Map />
             <Modal
                 open={modalOpened}
                 onClose={() => setModalOpened(!modalOpened)}

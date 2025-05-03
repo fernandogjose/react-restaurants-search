@@ -5,10 +5,12 @@
   "dependencies": {
     "@material/react-material-icon": "^0.15.0",
     "@material/react-text-field": "^0.15.0",
+    "@react-google-maps/api": "^2.20.6",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "google-maps-react": "^2.0.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-rating-star-component": "^1.0.2",
