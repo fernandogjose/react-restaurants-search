@@ -1,17 +1,22 @@
 import styled from "styled-components";
 
-export const Restaurant = styled.div`
-    display: flex;
-    justify-content: space-between;
+export const RestaurantContainer = styled.div`
     cursor: pointer;
-    margin-top: 5px;
-    padding: 16px;
     background-color: #ffffff;
-    border-left: 5px solid transparent;
     :hover {
         background-color: #00000021;
         border-left-color: ${(props) => props.theme.colors.primary};
     }
+`;
+
+export const Restaurant = styled.div`
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    margin-top: 6px;
+    cursor: pointer;
+    background-color: #ffffff;
+    border-left: 5px solid transparent;
 `;
 
 export const RestaurantInfo = styled.div`
