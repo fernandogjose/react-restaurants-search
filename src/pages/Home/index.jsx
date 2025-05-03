@@ -13,10 +13,11 @@ import logo from "../../assets/logo.svg";
 import restaurant from "../../assets/restaurante-fake.png";
 import TextField, { Input } from "@material/react-text-field";
 import MaterialIcon from "@material/react-material-icon";
-import { ImageCard, RestaurantCard } from "../../components";
+import { ImageCard, RestaurantCard, Modal } from "../../components";
 
 const Home = () => {
     const [inputValue, setInputValue] = useState("");
+    const [modalOpened, setModalOpened] = useState(true);
 
     const settings = {
         dots: false,
@@ -60,6 +61,10 @@ const Home = () => {
                 <RestaurantCard />
             </Container>
             <MapContainer></MapContainer>
+            <Modal
+                open={modalOpened}
+                onClose={() => setModalOpened(!modalOpened)}
+            />
         </Wrapper>
     );
 };
