@@ -1,6 +1,6 @@
 import React from "react";
 import ReactStars from "react-rating-stars-component";
-import restaurant from "../../assets/restaurante-fake.png";
+import photoDefault from "../../assets/restaurante-fake.png";
 
 import {
     RestaurantContainer,
@@ -11,23 +11,30 @@ import {
     RestaurantPhoto,
 } from "./styles";
 
-const RestaurantCard = () => (
-    <RestaurantContainer>
-        <Restaurant>
-            <RestaurantInfo>
-                <RestaurantName>The Gardens Seasons</RestaurantName>
-                <ReactStars
-                    count={5}
-                    isHalf={true}
-                    activeColor="#e7711c"
-                    edit={false}
-                    value={4}
-                />
-                <RestaurantAddress>Rua Ulisses Cruz, 668</RestaurantAddress>
-            </RestaurantInfo>
-            <RestaurantPhoto src={restaurant} alt="Foto do Restaurante" />
-        </Restaurant>
-    </RestaurantContainer>
-);
+const RestaurantCard = ({ restaurant }) => {
+    const photoUrl = restaurant.photos
+        ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+        : photoDefault;
+    return (
+        <RestaurantContainer>
+            <Restaurant>
+                <RestaurantInfo>
+                    <RestaurantName>{restaurant.name}</RestaurantName>
+                    <ReactStars
+                        count={5}
+                        isHalf={true}
+                        activeColor="#e7711c"
+                        edit={false}
+                        value={restaurant.rating}
+                    />
+                    <RestaurantAddress>
+                        {restaurant.vicinity || restaurant.formatted_address}
+                    </RestaurantAddress>
+                </RestaurantInfo>
+                <RestaurantPhoto src={photoUrl} alt={restaurant.name} />
+            </Restaurant>
+        </RestaurantContainer>
+    );
+};
 
 export default RestaurantCard;

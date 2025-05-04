@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
     Container,
     Search,
@@ -18,6 +19,7 @@ const Home = () => {
     const [inputValue, setInputValue] = useState("");
     const [valueToSearch, setValueToSearch] = useState(null);
     const [modalOpened, setModalOpened] = useState(false);
+    const { restaurants } = useSelector((state) => state.restaurants);
 
     const settings = {
         dots: false,
@@ -65,7 +67,10 @@ const Home = () => {
                         <ImageCard photo={restaurant} title="Meu restaurante" />
                     </Carousel>
                 </Search>
-                <RestaurantCard />
+
+                {restaurants.map((restaurant) => (
+                    <RestaurantCard restaurant={restaurant} />
+                ))}
             </Container>
             <Map valueToSearch={valueToSearch} />
             <Modal

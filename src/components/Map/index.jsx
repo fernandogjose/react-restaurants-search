@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { useDispatch, useSelector } from "react-redux";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { setRestaurants } from "../../redux/modules/restaurants";
 
 const containerStyle = {
     width: "100%",
@@ -14,8 +16,9 @@ const defaultCenter = {
 const libraries = ["places"];
 
 function MapComponent({ valueToSearch }) {
+    const dispatch = useDispatch();
+    const { restaurants } = useSelector((state) => state.restaurants);
     const [map, setMap] = useState(null);
-    const [places, setPlaces] = useState([]);
     const [mapCenter, setMapCenter] = useState(defaultCenter);
 
     const { isLoaded } = useJsApiLoader({
@@ -70,8 +73,7 @@ function MapComponent({ valueToSearch }) {
             const response = await fetch(url);
             const data = await response.json();
             if (data.status === "OK") {
-                setPlaces(data.results);
-                console.log("Restaurantes próximos:", data.results);
+                dispatch(setRestaurants(data.results));
             } else {
                 console.error("Erro da API Places (Nearby):", data.status);
             }
@@ -92,8 +94,7 @@ function MapComponent({ valueToSearch }) {
             const response = await fetch(url);
             const data = await response.json();
             if (data.status === "OK") {
-                setPlaces(data.results);
-                console.log(`Resultados para "${queryValue}":`, data.results);
+                dispatch(setRestaurants(data.results));
             } else {
                 console.error("Erro da API Places (Query):", data.status);
             }
@@ -108,7 +109,18 @@ function MapComponent({ valueToSearch }) {
             center={mapCenter}
             zoom={14}
             onLoad={onLoad}
-        ></GoogleMap>
+        >
+            {restaurants.map((restaurant) => (
+                <Marker
+                    key={restaurant.place_id}
+                    name={restaurant.name}
+                    position={{
+                        lat: restaurant.geometry.location.lat,
+                        lng: restaurant.geometry.location.lng,
+                    }}
+                />
+            ))}
+        </GoogleMap>
     ) : (
         <div>Carregando mapa...</div>
     );
