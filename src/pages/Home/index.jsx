@@ -16,6 +16,7 @@ import { ImageCard, RestaurantCard, Modal, Map } from "../../components";
 
 const Home = () => {
     const [inputValue, setInputValue] = useState("");
+    const [valueToSearch, setValueToSearch] = useState(null);
     const [modalOpened, setModalOpened] = useState(false);
 
     const settings = {
@@ -26,6 +27,12 @@ const Home = () => {
         slidesToScroll: 4,
         rows: 1,
     };
+
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+            setValueToSearch(inputValue);
+        }
+    }
 
     return (
         <Wrapper>
@@ -44,6 +51,7 @@ const Home = () => {
                         <Input
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
+                            onKeyUp={handleKeyPress}
                         />
                     </TextField>
                     <CarrouselTitle> O que você deseja comer? </CarrouselTitle>
@@ -59,7 +67,7 @@ const Home = () => {
                 </Search>
                 <RestaurantCard />
             </Container>
-            <Map />
+            <Map valueToSearch={valueToSearch} />
             <Modal
                 open={modalOpened}
                 onClose={() => setModalOpened(!modalOpened)}
