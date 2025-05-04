@@ -13,22 +13,21 @@ const defaultCenter = {
 
 const libraries = ["places"];
 
-function MapComponent(props) {
+function MapComponent({ valueToSearch }) {
     const [map, setMap] = useState(null);
     const [places, setPlaces] = useState([]);
     const [mapCenter, setMapCenter] = useState(defaultCenter);
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
-        libraries: libraries,
+        libraries,
     });
 
     const onLoad = useCallback((mapInstance) => {
         setMap(mapInstance);
     }, []);
 
-    const { valueToSearch } = props;
-
+    // Pega a localização do usuário ao carregar
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -46,66 +45,62 @@ function MapComponent(props) {
         }
     }, []);
 
+    // Realiza a busca ao carregar o mapa ou mudar localização
     useEffect(() => {
-        if (isLoaded && map) {
-            const fetchPlaces = async () => {
-                const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
-                const { lat, lng } = mapCenter;
-                const radius = 1000;
-                const url = `https://thingproxy.freeboard.io/fetch/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=restaurant&key=${apiKey}`;
-
-                try {
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    if (data.status === "OK") {
-                        setPlaces(data.results);
-                        console.log("Restaurantes encontrados:", data.results);
-                    } else {
-                        console.error(
-                            "Erro na resposta da API Places:",
-                            data.status
-                        );
-                    }
-                } catch (error) {
-                    console.error("Erro na requisição HTTP:", error);
-                }
-            };
-
-            fetchPlaces();
+        if (isLoaded && map && !valueToSearch) {
+            fetchPlacesNearby();
         }
-    }, [isLoaded, map, mapCenter]);
+    }, [isLoaded, map, mapCenter, valueToSearch]);
 
+    // Busca por texto quando o usuário digitar algo
     useEffect(() => {
-        if (valueToSearch) searchByQuery(valueToSearch);
-    }, [valueToSearch]);
+        if (isLoaded && map && valueToSearch) {
+            fetchPlacesByQuery(valueToSearch);
+        }
+    }, [valueToSearch, isLoaded, map, mapCenter]);
 
-    function searchByQuery(valueToSearch) {
-        const fetchPlaces = async () => {
-            const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
-            const { lat, lng } = mapCenter;
-            const radius = 1000;
-            const query = encodeURIComponent(valueToSearch);
-            const url = `https://thingproxy.freeboard.io/fetch/https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&location=${lat},${lng}&radius=${radius}&key=${apiKey}`;
+    const fetchPlacesNearby = async () => {
+        const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
+        const { lat, lng } = mapCenter;
+        const radius = 1000;
 
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                if (data.status === "OK") {
-                    setPlaces(data.results);
-                    console.log("Restaurantes encontrados:", data.results);
-                } else {
-                    console.error(
-                        "Erro na resposta da API Places:",
-                        data.status
-                    );
-                }
-            } catch (error) {
-                console.error("Erro na requisição HTTP:", error);
+        const url = `https://thingproxy.freeboard.io/fetch/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=restaurant&key=${apiKey}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.status === "OK") {
+                setPlaces(data.results);
+                console.log("Restaurantes próximos:", data.results);
+            } else {
+                console.error("Erro da API Places (Nearby):", data.status);
             }
-        };
+        } catch (error) {
+            console.error("Erro HTTP (Nearby):", error);
+        }
+    };
 
-        fetchPlaces();
-    }
+    const fetchPlacesByQuery = async (queryValue) => {
+        const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
+        const { lat, lng } = mapCenter;
+        const radius = 1000;
+        const query = encodeURIComponent(queryValue);
+
+        const url = `https://thingproxy.freeboard.io/fetch/https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&location=${lat},${lng}&radius=${radius}&key=${apiKey}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.status === "OK") {
+                setPlaces(data.results);
+                console.log(`Resultados para "${queryValue}":`, data.results);
+            } else {
+                console.error("Erro da API Places (Query):", data.status);
+            }
+        } catch (error) {
+            console.error("Erro HTTP (Query):", error);
+        }
+    };
 
     return isLoaded ? (
         <GoogleMap
