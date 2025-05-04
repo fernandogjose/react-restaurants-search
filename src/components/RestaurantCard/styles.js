@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
 export const RestaurantContainer = styled.div`
-    cursor: pointer;
-    background-color: #ffffff;
     :hover {
         background-color: #00000021;
         border-left-color: ${(props) => props.theme.colors.primary};
@@ -10,12 +8,12 @@ export const RestaurantContainer = styled.div`
 `;
 
 export const Restaurant = styled.div`
+    cursor: pointer;
+    background-color: #ffffff;
     display: flex;
     justify-content: space-between;
     padding: 16px;
     margin-top: 6px;
-    cursor: pointer;
-    background-color: #ffffff;
     border-left: 5px solid transparent;
 `;
 
