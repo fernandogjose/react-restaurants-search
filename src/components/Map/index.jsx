@@ -17,6 +17,8 @@ const defaultCenter = {
 };
 
 const libraries = ["places"];
+const proxyUrl = "https://thingproxy.freeboard.io/fetch/";
+const googleBaseUrl = "https://maps.googleapis.com/maps/api/place";
 
 function MapComponent(props) {
     const dispatch = useDispatch();
@@ -80,7 +82,7 @@ function MapComponent(props) {
         const { lat, lng } = mapCenter;
         const radius = 1000;
 
-        const url = `https://thingproxy.freeboard.io/fetch/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=restaurant&key=${apiKey}`;
+        const url = `${proxyUrl}${googleBaseUrl}/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=restaurant&key=${apiKey}`;
 
         try {
             const response = await fetch(url);
@@ -103,7 +105,7 @@ function MapComponent(props) {
         const radius = 1000;
         const query = encodeURIComponent(queryValue);
 
-        const url = `https://thingproxy.freeboard.io/fetch/https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&location=${lat},${lng}&radius=${radius}&key=${apiKey}`;
+        const url = `${proxyUrl}${googleBaseUrl}/textsearch/json?query=${query}&location=${lat},${lng}&radius=${radius}&key=${apiKey}`;
 
         try {
             const response = await fetch(url);
@@ -123,7 +125,7 @@ function MapComponent(props) {
 
         const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
 
-        const url = `https://thingproxy.freeboard.io/fetch/https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${apiKey}`;
+        const url = `${proxyUrl}${googleBaseUrl}/details/json?place_id=${placeId}&key=${apiKey}`;
 
         try {
             const response = await fetch(url);
@@ -154,6 +156,12 @@ function MapComponent(props) {
                     position={{
                         lat: restaurant.geometry.location.lat,
                         lng: restaurant.geometry.location.lng,
+                    }}
+                    onClick={() => {
+                        setMapCenter({
+                            lat: restaurant.geometry.location.lat,
+                            lng: restaurant.geometry.location.lng,
+                        });
                     }}
                 />
             ))}
