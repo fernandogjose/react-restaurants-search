@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import { setRestaurants } from "../../redux/modules/restaurants";
+import {
+    setRestaurants,
+    setRestaurantSelected,
+} from "../../redux/modules/restaurants";
 
 const containerStyle = {
     width: "100%",
@@ -15,11 +18,12 @@ const defaultCenter = {
 
 const libraries = ["places"];
 
-function MapComponent({ valueToSearch }) {
+function MapComponent(props) {
     const dispatch = useDispatch();
     const { restaurants } = useSelector((state) => state.restaurants);
     const [map, setMap] = useState(null);
     const [mapCenter, setMapCenter] = useState(defaultCenter);
+    const { valueToSearch, placeId } = props;
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
@@ -62,7 +66,16 @@ function MapComponent({ valueToSearch }) {
         }
     }, [valueToSearch, isLoaded, map, mapCenter]);
 
+    // Busca por restaurante específico quando o usuário clicar em um marcador
+    useEffect(() => {
+        if (placeId) {
+            fetchPlaceById(placeId);
+        }
+    }, [placeId]);
+
     const fetchPlacesNearby = async () => {
+        dispatch(setRestaurants([]));
+
         const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
         const { lat, lng } = mapCenter;
         const radius = 1000;
@@ -83,6 +96,8 @@ function MapComponent({ valueToSearch }) {
     };
 
     const fetchPlacesByQuery = async (queryValue) => {
+        dispatch(setRestaurants([]));
+
         const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
         const { lat, lng } = mapCenter;
         const radius = 1000;
@@ -103,12 +118,34 @@ function MapComponent({ valueToSearch }) {
         }
     };
 
+    const fetchPlaceById = async (placeId) => {
+        dispatch(setRestaurantSelected(null));
+
+        const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
+
+        const url = `https://thingproxy.freeboard.io/fetch/https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${apiKey}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.status === "OK") {
+                const placeDetails = data.result;
+                dispatch(setRestaurantSelected(placeDetails));
+            } else {
+                console.error("Erro da API Places (Details):", data.status);
+            }
+        } catch (error) {
+            console.error("Erro HTTP (Details):", error);
+        }
+    };
+
     return isLoaded ? (
         <GoogleMap
             mapContainerStyle={containerStyle}
             center={mapCenter}
             zoom={14}
             onLoad={onLoad}
+            {...props}
         >
             {restaurants.map((restaurant) => (
                 <Marker

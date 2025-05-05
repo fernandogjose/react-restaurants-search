@@ -16,7 +16,7 @@ const Title = styled.p`
     font-family: ${(props) => props.theme.fonts.regular};
     color: #ffffff;
     font-size: 16px;
-    margin-left: 20px;
+    margin-left: 10px;
 `;
 
 const ImageCard = ({ photo, title }) => (

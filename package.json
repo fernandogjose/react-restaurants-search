@@ -14,6 +14,7 @@
     "google-maps-react": "^2.0.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-lottie": "^1.2.10",
     "react-rating-star-component": "^1.0.2",
     "react-rating-stars-component": "^2.2.0",
     "react-redux": "^9.2.0",

@@ -11,12 +11,12 @@ import {
     RestaurantPhoto,
 } from "./styles";
 
-const RestaurantCard = ({ restaurant }) => {
+const RestaurantCard = ({ restaurant, onClick }) => {
     const photoUrl = restaurant.photos
         ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
         : photoDefault;
     return (
-        <RestaurantContainer>
+        <RestaurantContainer onClick={onClick}>
             <Restaurant>
                 <RestaurantInfo>
                     <RestaurantName>{restaurant.name}</RestaurantName>

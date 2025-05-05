@@ -1,6 +1,6 @@
 export const Types = {
     SET_RESTAURANTS: 'restaurants/SET_RESTAURANTS',
-    SET_RESTAURANT: 'restaurants/SET_RESTAURANT',
+    SET_RESTAURANT_SELECTED: 'restaurants/SET_RESTAURANT_SELECTED',
 }
 
 const initialState = {
@@ -13,8 +13,8 @@ export default function reducer(state = initialState, action) {
         case Types.SET_RESTAURANTS:
             return { ...state, restaurants: action.payload };
 
-        case Types.SET_RESTAURANT:
-            return { ...state, restaurant: action.payload };
+        case Types.SET_RESTAURANT_SELECTED:
+            return { ...state, restaurantSelected: action.payload };
 
         default:
             return state;
@@ -28,9 +28,9 @@ export function setRestaurants(restaurants) {
     }
 }
 
-export function setRestaurant(restaurant) {
+export function setRestaurantSelected(restaurantSelected) {
     return {
-        type: Types.SET_RESTAURANTS,
-        payload: restaurant,
+        type: Types.SET_RESTAURANT_SELECTED,
+        payload: restaurantSelected,
     }
 }

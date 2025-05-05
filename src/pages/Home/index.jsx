@@ -8,18 +8,29 @@ import {
     Wrapper,
     CarrouselTitle,
     Carousel,
+    ModalTitle,
+    ModalContent,
 } from "./styles";
 import logo from "../../assets/logo.svg";
-import restaurant from "../../assets/restaurante-fake.png";
 import TextField, { Input } from "@material/react-text-field";
 import MaterialIcon from "@material/react-material-icon";
-import { ImageCard, RestaurantCard, Modal, Map } from "../../components";
+import {
+    ImageCard,
+    RestaurantCard,
+    Modal,
+    Map,
+    Loader,
+} from "../../components";
+import photoDefault from "../../assets/restaurante-fake.png";
 
 const Home = () => {
     const [inputValue, setInputValue] = useState("");
     const [valueToSearch, setValueToSearch] = useState(null);
     const [modalOpened, setModalOpened] = useState(false);
-    const { restaurants } = useSelector((state) => state.restaurants);
+    const [placeId, setPlaceId] = useState(null);
+    const { restaurants, restaurantSelected } = useSelector(
+        (state) => state.restaurants
+    );
 
     const settings = {
         dots: false,
@@ -28,12 +39,18 @@ const Home = () => {
         slidesToShow: 4,
         slidesToScroll: 4,
         rows: 1,
+        autoplay: true,
     };
 
     function handleKeyPress(event) {
         if (event.key === "Enter") {
             setValueToSearch(inputValue);
         }
+    }
+
+    function handleOpenModal(placeId) {
+        setPlaceId(placeId);
+        setModalOpened(true);
     }
 
     return (
@@ -56,27 +73,58 @@ const Home = () => {
                             onKeyUp={handleKeyPress}
                         />
                     </TextField>
-                    <CarrouselTitle> O que você deseja comer? </CarrouselTitle>
-                    <Carousel {...settings}>
-                        <ImageCard photo={restaurant} title="Meu restaurante" />
-                        <ImageCard photo={restaurant} title="Meu restaurante" />
-                        <ImageCard photo={restaurant} title="Meu restaurante" />
-                        <ImageCard photo={restaurant} title="Meu restaurante" />
-                        <ImageCard photo={restaurant} title="Meu restaurante" />
-                        <ImageCard photo={restaurant} title="Meu restaurante" />
-                        <ImageCard photo={restaurant} title="Meu restaurante" />
-                    </Carousel>
+                    {restaurants.length > 0 ? (
+                        <>
+                            <CarrouselTitle>
+                                O que você deseja comer?
+                            </CarrouselTitle>
+                            <Carousel {...settings}>
+                                {restaurants.map((restaurant) => {
+                                    const photoUrl = restaurant.photos
+                                        ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+                                        : photoDefault;
+
+                                    return (
+                                        <ImageCard
+                                            key={restaurant.place_id}
+                                            photo={photoUrl}
+                                            title={restaurant.name}
+                                        />
+                                    );
+                                })}
+                            </Carousel>
+                        </>
+                    ) : (
+                        <Loader />
+                    )}
                 </Search>
 
                 {restaurants.map((restaurant) => (
-                    <RestaurantCard restaurant={restaurant} />
+                    <RestaurantCard
+                        key={restaurant.place_id}
+                        restaurant={restaurant}
+                        onClick={() => handleOpenModal(restaurant.place_id)}
+                    />
                 ))}
             </Container>
-            <Map valueToSearch={valueToSearch} />
+            <Map valueToSearch={valueToSearch} placeId={placeId} />
             <Modal
                 open={modalOpened}
                 onClose={() => setModalOpened(!modalOpened)}
-            />
+            >
+                <ModalTitle>{restaurantSelected?.name}</ModalTitle>
+                <ModalContent>
+                    {restaurantSelected?.formatted_phone_number}
+                </ModalContent>
+                <ModalContent>
+                    {restaurantSelected?.formatted_address}
+                </ModalContent>
+                <ModalContent>
+                    {restaurantSelected?.opening_hours?.open_now
+                        ? "Aberto agora :-)"
+                        : "Fechado agora :-("}
+                </ModalContent>
+            </Modal>
         </Wrapper>
     );
 };
