@@ -18,7 +18,10 @@ const defaultCenter = {
 };
 
 const libraries = ["places"];
-const proxyUrl = "https://thingproxy.freeboard.io/fetch/";
+const proxyUrl =
+    process.env.NODE_ENV === "production"
+        ? ""
+        : "https://thingproxy.freeboard.io/fetch/";
 const googleBaseUrl = "https://maps.googleapis.com/maps/api/place";
 
 function MapComponent(props) {
