@@ -71,7 +71,7 @@ const Home = () => {
                         <Input
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
-                            onKeyUp={handleKeyPress}
+                            onKeyDown={handleKeyPress}
                         />
                     </TextField>
                     {restaurants.length > 0 ? (
