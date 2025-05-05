@@ -20,6 +20,7 @@ import {
     Modal,
     Map,
     Loader,
+    Skeleton,
 } from "../../components";
 import photoDefault from "../../assets/restaurante-fake.png";
 
@@ -112,18 +113,27 @@ const Home = () => {
                 open={modalOpened}
                 onClose={() => setModalOpened(!modalOpened)}
             >
-                <ModalTitle>{restaurantSelected?.name}</ModalTitle>
-                <ModalContent>
-                    {restaurantSelected?.formatted_phone_number}
-                </ModalContent>
-                <ModalContent>
-                    {restaurantSelected?.formatted_address}
-                </ModalContent>
-                <ModalContent>
-                    {restaurantSelected?.opening_hours?.open_now
-                        ? "Aberto agora :-)"
-                        : "Fechado agora :-("}
-                </ModalContent>
+                {restaurantSelected ? (
+                    <>
+                        <ModalTitle>{restaurantSelected?.name}</ModalTitle>
+                        <ModalContent>
+                            {restaurantSelected?.formatted_phone_number}
+                        </ModalContent>
+                        <ModalContent>
+                            {restaurantSelected?.formatted_address}
+                        </ModalContent>
+                        <ModalContent>
+                            {restaurantSelected?.opening_hours?.open_now
+                                ? "Aberto agora :-)"
+                                : "Fechado agora :-("}
+                        </ModalContent>
+                    </>
+                ) : (
+                    <>
+                        <ModalContent>loading...</ModalContent>
+                        <Skeleton width="10px" height="10px" />
+                    </>
+                )}
             </Modal>
         </Wrapper>
     );
