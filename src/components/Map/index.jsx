@@ -82,11 +82,14 @@ function MapComponent(props) {
     const fetchPlacesNearby = async () => {
         dispatch(setRestaurants([]));
 
-        const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
         const { lat, lng } = mapCenter;
         const radius = 1000;
+        const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
 
-        const url = `${proxyUrl}${googleBaseUrl}/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=restaurant&key=${apiKey}`;
+        let url = `${proxyUrl}${googleBaseUrl}/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=restaurant&key=${apiKey}`;
+        if (process.env.NODE_ENV === "production") {
+            url = `/.netlify/functions/getNearbyRestaurants?lat=${lat}&lng=${lng}`;
+        }
 
         try {
             const response = await fetch(url);
